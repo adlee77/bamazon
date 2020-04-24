@@ -30,8 +30,17 @@ function start() {
         }
     ])
         .then(function(answer) {
-            console.log(answer)
+            connection.query(`SELECT * FROM products WHERE id = ?`, [answer.idNumber], ()=>{
+                if (answer.units <= 'stock_quantity')
+                    console.log('Ok we got your order')
+                   // stock_quantity - answer.units
+                    console.log(`You are purchasing ${product_name}, id:${answer.idNumber} for '$'${answer.units * price}`);
+                else {
+                    console.log('Insufficient quantity')
+                }
+            })
         })
 }
 start();
+
 
