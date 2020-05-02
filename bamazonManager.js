@@ -21,7 +21,7 @@ function start() {
         {
             name: "options",
             type: "list",
-            message: "What is the ID number of the product you would like?",
+            message: "What would you like to do?",
             choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
         }
     ])
@@ -30,14 +30,12 @@ function start() {
                 connection.query(`SELECT * FROM products`, (err, res) => {
                     if (err) throw err;
                     console.log(res)
-                    connection.end()
                 })
             }
             else if (answer.options = "View Low Inventory") {
-                connection.query(`SELECT * FROM products WHERE stock_quantity < 5`, (err, res) =>{
+                connection.query(`SELECT * FROM products WHERE ${res[0].stock_quantity < 5}`, (err, res) =>{
                     if (err) throw err;
                     console.log(res)
-                    connection.end()
                 })
             }
             else if (answer.options = "Add to Inventory") {
@@ -46,6 +44,7 @@ function start() {
             else if (answer.options = "Add New Product") {
                 addProducts()
             }
+            connection.end()
         })
 }
 function addProducts() {
@@ -98,8 +97,8 @@ function addInventory() {
             message: 'How much would you like to add?'
         }
     .then(function(answer) {
-        connection.query(`SELECT * FROM products WHERE product_name = answer.item`, (err, res) => {
-            res.stock_quantity + answer.num 
+        connection.query(`SELECT * FROM products WHERE ${res[0].product_name = answer.item}`, (err, res) => {
+            connection.query("UPDATE products SET stock_quantity = ? WHERE id = ?", [res[0].stock_quantity + answer.num, answer.item], (err) => { if (err) throw err })
             console.log(`Ok, we added ${answer.num} ${answer.item}s`)
         })
     })
